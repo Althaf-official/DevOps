@@ -89,5 +89,44 @@ For app04: sudo ip addr add 172.16.239.16/24 dev eth0
 ![image](https://github.com/Althaf-official/DevOps/assets/105126131/f185f5fa-b26d-4667-bee9-4d4e02dce006)
 
 
+# Now if you try to SSH into each app one by one from jump host you will find that you are able to SSH into app01 and app02 but not into app03 and app04. Why so ?
+
+In the previous question, we assigned the new IPs to app servers.
+
+We assigned app01 & app02 to 172.16.238.x and app03 & app04 to 172.16.239.x which is in different network range.
+
+So you can check the same for jump host by running ip a command, you will see that it's in the same network range of app01 and app02 that's why we are able to SSH.
+
+![image](https://github.com/Althaf-official/DevOps/assets/105126131/9847e132-f57c-4a4b-945e-e77acdfdd438)
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# FIX ME
+# Since now app03 and app04 are on different network range than jump host so you are not able to SSH into those hosts from jump host. To make SSH work make required changes on jump host.
 
 
+a. Assign a new IP address 172.16.239.10/24 to jump host with same network range which app03 and app04 are using.
+
+b. Now you will be able to SSH into all apps from jump host.
+
+NOTE: - After the change, you may experience a delay when trying to SSH from the jump server to the app servers.
+
+Use command: sudo ip addr add 172.16.239.10/24 dev eth0
+
+
+# FIXME
+# Now jump host is able to access all four apps. But if you try to ping app03 or app04 from app01 or app02 or vice versa you will see ping is not working. So now we want to use jump host as a router so that app01 and app02 can access app03 and app04 and vice versa, lets add some routing table entries on these hosts to make it work.
+
+
+a. Add a routing table entry in app01 and app02 hosts so that these hosts can reach app03 and app04 hosts via jump host.
+
+b. Add a routing table entry in app03 and app04 hosts so that these hosts can reach app01 and app02 hosts via jump host.
+
+c. Now try to ping app03 and app04 from app01 and app02 and vice versa, every app should be able to ping each other.
+
+
+
+Use below mentioned command:
+
+On app01 and app02: sudo ip route add 172.16.239.0/24 via 172.16.238.10
+
+On app03 and app04: sudo ip route add 172.16.238.0/24 via 172.16.239.10
